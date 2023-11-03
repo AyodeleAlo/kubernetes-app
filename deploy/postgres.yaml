@@ -4,13 +4,14 @@ metadata:
   name: django-postgres-pvc
   labels:
     app: django
-  spec:
-    accessModes:
-     - ReadWriteOnce
-    resources:
-      requests:
-        storage: 10Gi
-
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  hostPath:
+    path: "/home/e4esysadmin/Desktop/kubernetes-app/data"
 ---
 
 apiVersion: apps/v1
@@ -27,16 +28,16 @@ spec:
   strategy:
     type: Recreate
   template:
-     metadata:
+    metadata:
       labels:
         app: django
         tier: postgres
-  volumes:
-    - name: postgres-data
-      persistentVolumeClaim:
-        claimName: django-postgres-pvc
-     spec:
-       containers:
+    spec:
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: django-postgres-pvc
+      containers:
         - image: postgres:15.2
           name: postgres
           ports:
